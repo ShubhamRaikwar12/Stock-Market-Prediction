@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Raisoni Stock Market Prediction{% endblock title %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>About</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+    <style>
+        .intro{
+            margin-left: 25px;
+            margin-right: 25px;
+
+        }
+        #imag{
+            margin-left: 23%;
+            margin-right: 30%;
+            margin-top: 20px;
+            border: solid 1px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <br>
+    <div class="intro">
+    <p>“Stock Market Prediction using ML” is the project on technical analysis, visualization, and prediction using data provided by Yahoo Finance. To Analyse & Predict Stock (Shares) changes from trained data using Machine Learning Algorithms. 
+
+    From the literature survey, it was observed that the application of machine learning techniques to stock market prediction is being undertaken thoroughly throughout the world. Machine Learning techniques are proving to be much more accurate and faster as compared to contemporary prediction techniques. Prediction of stock prices is very challenging and complicated process because price movement just behaves like a random walk and time varying.
+    </p>
+
+    <p><br>Software Requirement:
+        <ol>
+            <li>Operating System: Windows XP, Linux, Mac OS x</li>
+            <li>Scripting Language: Python</li>
+        </ol>
+        Hardware Requirement:<br>
+        <ol>
+            <li>CPU: 2 x 64-bit 2.8 GHz 8.00 GT/s CPUs</li>
+            <li> RAM: 8 GB (or 16 GB of 1600 MHz DDR3 RAM)</li>
+            <li>Storage: 100 GB</li>
+        </ol>
+
+        version: 2.0 Ready to Release (RTR)
+            
+    </p>
+</div>
+    <img id="imag" style="width: 50%; height: 50%;"
+    alt="Image description"
+    src="{% static '/image/progress.png' %}"/>
+    </div>  
+    <br>
+    <img id="imag" style="width: 50%; height: 50%;"
+    alt="Image description"
+    src="{% static '/image/timeline.png' %}"/> 
+
+</body>
+</html>
+
+{% endblock content %}

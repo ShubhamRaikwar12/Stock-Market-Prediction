@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Raisoni Stock Market Prediction{% endblock title %}
+{% block content %}
+<script type="text/javascript">
+
+</script>
+<style>
+  tr, td{
+    font-size: 12px;
+    padding: 5px;
+  }
+</style>
+
+<div class="tlc fll w75">
+  <div class="pd10 w8 dib m10">
+    <span class="m10 bld cb f26 pd10">Stock Price Prediction For {{company}}</span>
+    <form class="mt tlc" method="POST">
+      {% csrf_token %}
+      <input type="text" placeholder="Enter Company Code Ex: AMZN" name="company" class="h40 w35 f16 bld cb brdbl pd10 brd">
+      <input type="text" placeholder="Start Date" name="start_date" value="2017-01-01" class="datepicker h40 w1 f16 bld cb brdbl pd10 brd">
+      <input type="text" placeholder="End Date" name="end_date" id="today" class="h40 w1 f16 bld cb brdbl pd10 brd">
+      <!-- <input type="text" placeholder="Country Code" name="country" class="h40 w2 f16 bld cb brdbl pd10 brd"> -->
+      <button type="sumbit" class="h40 w15 brd f16 brdbl pd10 cbb">Get Details</button>
+    </form>
+  </div>
+
+  <div class="dib w95 pd5 brd bwht bshd4">
+    <table class="">
+      <thead class="bld">
+        <tr class="cbb h60">
+          <td>Date</td>
+          <td>High</td>
+          <td>Low</td>
+          <td>Open</td>
+          <td>Close</td>
+          <td>Volume</td>
+          <td>Adj Close</td>
+          <td>Average</td>
+          <td>Rets</td>
+          <td>HL_PCT</td>
+          <td>PCT_change</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in first_table %}
+        <tr>
+          <td>{{item.Date|date:"d-m-Y"}}</td>
+          <td>{{item.High|floatformat:3}}</td>
+          <td>{{item.Low|floatformat:3}}</td>
+          <td>{{item.Open|floatformat:3}}</td>
+          <td>{{item.Close|floatformat:3}}</td>
+          <td>{{item.Volume}}</td>
+          <td>{{item.Adj_Close|floatformat:3}}</td>
+          <td>{{item.Average|floatformat:3}}</td>
+          <td>{{item.Rets|floatformat:3}}</td>
+          <td>{{item.HL_PCT|floatformat:3}}</td>
+          <td>{{item.PCT_change|floatformat:3}}</td>
+          
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if not_found.text %}
+    <span class="mt dib m10 bld cb f30 pd10">{{not_found.text}}</span>
+    {% endif %}
+
+  </div>
+  <div class="tlc dif w95">
+    <div class="dib fll w5 pd5 mt mr10 brd bwht bshd4" style="height: 326px;">
+      <table class="">
+        <thead class="bld">
+          <tr class="cbb h60">
+            <td>Forecast Date</td>
+            <td>Forecast Set</td>
+            <td>Confidence Reg</td>
+            <td>Forecast Out</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 0;" colspan="2"></td>
+            <td rowspan="10">{{confidencereg|floatformat:3}}</td>
+            <td rowspan="10">{{forecast_out|floatformat:3}}</td>
+
+          </tr>
+          {% for item in final_table10 %}
+          <tr>
+            <td>{{item.Date|date:"d-m-Y"}}</td>
+            <td>{{item.Forecast|floatformat:3}}</td>
+
+          </tr>
+          {% endfor %}
+
+
+        </tbody>
+      </table>
+    </div>
+    <div class="w49 fll dib mt ml3 pd10 bwht bord brd bshd4">
+      <canvas id="line-chart3" width="800" height="400"></canvas>
+    </div>
+  </div>
+  <div class="tlc dif w95">
+    <div class="w5 fll dib mt mr10 pd10 bwht bord brd bshd4">
+      <canvas id="line-chart" width="800" height="450"></canvas>
+    </div>
+    <div class="w49 fll dib mt ml3 pd10 bwht bord brd bshd4">
+      <canvas id="line-chart2" width="800" height="450"></canvas>
+    </div>
+  </div>
+  <script type="text/javascript">
+    new Chart(document.getElementById("line-chart"), {
+      type: 'line',
+      data: {
+        labels: [{% for item in full_table %}"{{item.Date|date:"M-Y"}}",{%endfor%}],
+        datasets: [{ 
+          data: [{% for item in full_table %}{{item.Adj_Close|floatformat:2}},{%endfor%}],
+          label: "{{company}}",
+          pointRadius: 0,
+          borderColor: "#3e95cd",
+          fill: true
+        }, { 
+          data: [{% for item in full_table %}{{item.Average|floatformat:2}},{%endfor%}],
+          label: "Average",
+          pointRadius: 0,
+          borderColor: "#8e5ea2",
+          fill: false
+        }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              drawOnChartArea: true
+            }
+          }]
+        },
+        title: {
+          display: true,
+          text: 'Average Data'
+        }
+      }
+    });
+
+    new Chart(document.getElementById("line-chart2"), {
+      type: 'line',
+      data: {
+        labels: [{% for item in final_table %}"{{item.Date|date:"M-Y"}}",{%endfor%}],
+        datasets: [{ 
+          data: [{% for item in final_table %}{{item.Adj_Close|floatformat:2}},{%endfor%}],
+          pointRadius: 0,
+          label: "Adj_Close",
+          borderColor: '#095baf',
+          fill: true
+        }, { 
+          data: [{% for item in final_table %}{{item.Forecast|floatformat:2}},{%endfor%}],
+          label: "Forecast",
+          pointRadius: 0,
+          borderColor: "#8e5ea2",
+          fill: true
+        }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              drawOnChartArea: true
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              drawOnChartArea: true
+            }
+          }]
+        }
+      }
+    });
+
+    new Chart(document.getElementById("line-chart3"), {
+      type: 'line',
+      data: {
+        labels: [{% for item in full_table %}"{{item.Date|date:"M-Y"}}",{%endfor%}],
+        datasets: [{ 
+          data: [{% for item in full_table %}{{item.Rets|floatformat:3}},{%endfor%}],
+          pointRadius: 0,
+          label: "Rets",
+          borderColor: '#095baf',
+          fill: false
+        }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              drawOnChartArea: true
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              drawOnChartArea: true
+            }
+          }]
+        }
+      }
+    });
+  </script>
+</div>
+<aside class="fll w25 pd5 mt10">
+<h5 class="w10 cbb f25 pd10">News Feed</h5>
+  <div style="width: 24.3%" class="pab h10 bord bwht">
+    
+    <div class="mt5 ofs h10">
+      {% for item in feeds %}
+          <a target="blank" class="srl brbm1 h60 db pd2 m5" title="{{item.title}}" href="{{item.link}}"><span class="fll w8 pdl5 pr t40 talc tll">{{item.title|slice:"60"}}</span></a>
+      {% endfor %}
+    </div>
+  </div>
+</aside>
+
+
+{% endblock content %}

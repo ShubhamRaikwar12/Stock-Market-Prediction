@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <title>{% block title %}{% endblock title %} | Raisoni Stock Market Prediction</title>
+{% load static %}
+<link rel="icon" type="image/png" href="{% static 'image/favicon.ico' %}">
+    {% block head_meta %}
+    {% endblock head_meta %}
+    {% block head_css %}
+    {% block head_css_site %}
+        <link href="{% static 'css/style.css' %}?v=1.9.0" rel="stylesheet" media="screen">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+
+    {% endblock head_css_site %}
+    {% block head_css_section %}{% endblock head_css_section %}
+    {% block head_css_page %}{% endblock head_css_page %}
+    {% endblock head_css %}
+    </head>
+  <body style="padding: 60px 0">
+    {% include 'header.html' %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% block content %}
+    {% endblock content %}
+    {% include 'footer.html' %}
+    {% include 'scripts.html' %}
+  </body>
+  </html>
